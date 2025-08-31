@@ -1,6 +1,24 @@
 # Minecraft Client Project
 
-## 📌 Setup
+---
+
+## 📌 Setup / Установка
+
+### English
+To set up the project for **IntelliJ IDEA**:
+
+1. Make sure you have installed:
+   - **JDK 21** (or a version compatible with Minecraft 1.21.4).
+   - **Gradle** (or use the included wrapper `./gradlew`).
+
+2. Open the project in IntelliJ IDEA.
+
+3. Run the Gradle task to generate the run configuration:
+   ```bash
+   ./gradlew mcp:createIntelliJRunConfig
+
+### Russian
+
 Чтобы подготовить проект к запуску в **IntelliJ IDEA**:
 
 1. Убедись, что у тебя установлены:
