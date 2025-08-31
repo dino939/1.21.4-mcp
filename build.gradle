@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+}
+
+group = 'das.ist.denger.j2c'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree('libs')
+}
+
+tasks.register('runClient', JavaExec) {
+    group = "MCP"
+    description = "Runs the client"
+    classpath sourceSets.main.runtimeClasspath
+
+    if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+
+    jvmArgs '-Xms1G', '-Xmx4G'
+
+    workingDir 'run'
+    args '--gameDir', '.'
+    args '--version', '1.21.4'
+    args '--assetsDir', 'assets'
+    args '--assetIndex', '19'
+    args '--accessToken', '0'
+    args '--username', 'zov_client_56'
+    main = 'net.minecraft.client.main.Main'
+}
+
+tasks.register('createIntelliJRunConfig') {
+    group = "MCP"
+    doLast {
+        def runDir = file('.idea/runConfigurations')
+        runDir.mkdirs()
+
+        def configFile = new File(runDir, 'runClient.xml')
+
+        def vmArgs = '-Xms1G -Xmx4G'
+        if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+            vmArgs = '-XstartOnFirstThread -Xms1G -Xmx4G'
+        }
+
+        def configContent = """<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="runClient" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="net.minecraft.client.main.Main" />
+    <option name="VM_PARAMETERS" value="$vmArgs" />
+    <option name="PROGRAM_PARAMETERS" value="--gameDir . --version 1.21.4 --assetsDir assets --assetIndex 19 --accessToken 0 --username zov_client_56" />
+    <option name="WORKING_DIRECTORY" value="file://\$PROJECT_DIR\$/run" />
+    <module name="\${project.name}.main" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" />
+    </method>
+  </configuration>
+</component>"""
+
+        configFile.write(configContent)
+        println "Created IntelliJ run configuration: ${configFile.absolutePath}"
+    }
+}
